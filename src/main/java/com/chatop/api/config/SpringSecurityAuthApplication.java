@@ -22,6 +22,7 @@ public class SpringSecurityAuthApplication {
         return http.authorizeHttpRequests(auth -> {
             auth.requestMatchers(new AntPathRequestMatcher("/admin")).hasRole("ADMIN");
             auth.requestMatchers(new AntPathRequestMatcher("/user")).hasRole("USER");
+            auth.requestMatchers(new AntPathRequestMatcher("/rentals/**")).hasRole("USER");
             auth.anyRequest().authenticated();
         }).formLogin(Customizer.withDefaults()).build();
     }
