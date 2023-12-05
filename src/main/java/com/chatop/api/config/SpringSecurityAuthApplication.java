@@ -24,15 +24,16 @@ import com.nimbusds.jose.jwk.source.ImmutableSecret;
 @Configuration
 public class SpringSecurityAuthApplication {
 
-    private String jwtKey = "secret";
+    private String jwtKey = "mySuperSecretKeyWhichIsVeryLongAndSecure";
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.csrf(csrf -> csrf.disable())
+        return http
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
-                .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()))
-                .httpBasic(Customizer.withDefaults()).build();
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+                .httpBasic(Customizer.withDefaults())
+                .build();
     }
 
     @Bean
