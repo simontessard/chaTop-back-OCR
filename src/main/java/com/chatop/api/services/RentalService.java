@@ -3,6 +3,7 @@ package com.chatop.api.services;
 import com.chatop.api.models.Rental;
 import com.chatop.api.repository.RentalRepository;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ public class RentalService {
         this.rentalRepository = rentalRepository;
     }
 
-    public Iterable<Rental> getAllRentals() {
+    public List<Rental> findAll() {
         return rentalRepository.findAll();
     }
 
