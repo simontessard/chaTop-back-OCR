@@ -48,4 +48,8 @@ public class RentalService {
         newRental.setUpdated_at(newRental.getCreated_at());
         return rentalRepository.save(newRental);
     }
+
+    public Rental save(Rental rental) {
+        return rentalRepository.save(rental);
+    }
 }
