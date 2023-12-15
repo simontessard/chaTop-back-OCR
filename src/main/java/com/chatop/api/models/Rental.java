@@ -15,7 +15,7 @@ import lombok.Data;
 public class Rental {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     private String name;
     private Double surface;
     private Double price;

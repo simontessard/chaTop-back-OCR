@@ -25,7 +25,7 @@ public class RentalController {
     private final RentalService rentalService;
 
     @GetMapping("/api/rentals/{id}")
-    public ResponseEntity<Rental> getRentalById(@PathVariable Long id) {
+    public ResponseEntity<Rental> getRentalById(@PathVariable Integer id) {
         Optional<Rental> rental = rentalService.getRentalById(id);
         return rental.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
@@ -37,7 +37,7 @@ public class RentalController {
     }
 
     @PutMapping("/api/rentals/{id}")
-    public ResponseEntity<Rental> updateRental(@PathVariable Long id, @ModelAttribute Rental updatedRental) {
+    public ResponseEntity<Rental> updateRental(@PathVariable Integer id, @ModelAttribute Rental updatedRental) {
         Optional<Rental> rental = rentalService.getRentalById(id);
 
         if (rental.isPresent()) {
@@ -54,7 +54,7 @@ public class RentalController {
     }
 
     @PostMapping("/api/rentals/{id}")
-    public ResponseEntity<Rental> createRental(@PathVariable Long id, @RequestPart("rental") Rental newRental,
+    public ResponseEntity<Rental> createRental(@PathVariable Integer id, @RequestPart("rental") Rental newRental,
             @RequestPart("picture") MultipartFile picture) {
         newRental.setId(id);
         Rental savedRental = rentalService.createRental(newRental);

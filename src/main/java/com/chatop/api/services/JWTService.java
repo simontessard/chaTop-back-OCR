@@ -50,15 +50,12 @@ public class JWTService {
     }
 
     public User register(String username, String password) {
-        // Vérifiez si un utilisateur avec ce nom d'utilisateur existe déjà
 
         User existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
             throw new RuntimeException("User already exists");
         }
 
-        // Sinon, créez un nouvel utilisateur, enregistrez-le dans la base de données et
-        // renvoyez-le
         User newUser = new User();
         newUser.setUsername(username);
         newUser.setPassword(passwordEncoder.encode(password)); // encode the password

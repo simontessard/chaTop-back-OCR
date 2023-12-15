@@ -20,11 +20,11 @@ public class RentalService {
         return rentalRepository.findAll();
     }
 
-    public Optional<Rental> getRentalById(Long id) {
+    public Optional<Rental> getRentalById(Integer id) {
         return rentalRepository.findById(id);
     }
 
-    public Optional<Rental> updateRental(Long id, Rental updatedRental) {
+    public Optional<Rental> updateRental(Integer id, Rental updatedRental) {
         return rentalRepository.findById(id).map(rental -> {
             if (updatedRental.getName() != null) {
                 rental.setName(updatedRental.getName());
