@@ -19,7 +19,7 @@ import com.chatop.api.services.JWTService;
 
 @RestController
 @RequiredArgsConstructor
-public class LoginController {
+public class AuthController {
     private final JWTService jwtService;
 
     @PostMapping("/api/auth/login")
