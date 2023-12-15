@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.Map;
 import java.util.HashMap;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,7 @@ import com.chatop.api.services.JWTService;
 public class AuthController {
     private final JWTService jwtService;
 
+    @Operation(summary = "Get a new token for a user")
     @PostMapping("/api/auth/login")
     public ResponseEntity<Map<String, String>> getToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -31,6 +34,7 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    @Operation(summary = "Register a new user")
     @PostMapping("/api/auth/register")
     public ResponseEntity<User> register(@RequestBody User user) {
         User newUser = jwtService.register(user.getUsername(), user.getPassword());
