@@ -3,12 +3,16 @@ package com.chatop.api.controllers;
 import java.util.Optional;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.chatop.api.models.Rental;
 import com.chatop.api.services.RentalService;
@@ -47,5 +51,13 @@ public class RentalController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @PostMapping("/api/rentals/{id}")
+    public ResponseEntity<Rental> createRental(@PathVariable Long id, @RequestPart("rental") Rental newRental,
+            @RequestPart("picture") MultipartFile picture) {
+        newRental.setId(id);
+        Rental savedRental = rentalService.createRental(newRental);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedRental);
     }
 }
