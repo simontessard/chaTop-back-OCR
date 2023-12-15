@@ -8,10 +8,12 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import com.chatop.api.dto.NewUserDTO;
 import com.chatop.api.dto.TokenDTO;
 import com.chatop.api.models.User;
 
@@ -33,8 +35,13 @@ public class AuthController {
 
     @Operation(summary = "Register a new user and get him a token")
     @PostMapping("/api/auth/register")
-    public ResponseEntity<User> register(@RequestBody User user) {
+    public ResponseEntity<TokenDTO> register(@RequestBody NewUserDTO user) {
         User newUser = jwtService.register(user.getUsername(), user.getPassword());
-        return ResponseEntity.ok(newUser);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(newUser.getUsername(),
+                newUser.getPassword());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = jwtService.generateToken(authentication);
+        TokenDTO response = new TokenDTO(token);
+        return ResponseEntity.ok(response);
     }
 }
