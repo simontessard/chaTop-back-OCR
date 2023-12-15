@@ -13,6 +13,8 @@ import com.chatop.api.services.MessageService;
 import com.chatop.api.services.RentalService;
 import com.chatop.api.services.UserService;
 
+import io.swagger.v3.oas.annotations.Operation;
+
 import org.springframework.web.bind.annotation.RequestBody;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ public class MessageController {
     private final UserService userService;
     private final RentalService rentalService;
 
+    @Operation(summary = "Create a message between an user and a rental")
     @PostMapping("/api/messages")
     public ResponseEntity<Message> createMessage(@Valid @RequestBody MessageDTO payload) {
         String message = payload.getMessage();

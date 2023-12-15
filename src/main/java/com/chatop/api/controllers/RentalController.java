@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.chatop.api.models.Rental;
 import com.chatop.api.services.RentalService;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -24,18 +25,21 @@ import lombok.RequiredArgsConstructor;
 public class RentalController {
     private final RentalService rentalService;
 
+    @Operation(summary = "Get a specific rental")
     @GetMapping("/api/rentals/{id}")
     public ResponseEntity<Rental> getRentalById(@PathVariable Integer id) {
         Optional<Rental> rental = rentalService.getRentalById(id);
         return rental.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @Operation(summary = "Get all rentals")
     @GetMapping("/api/rentals")
     public ResponseEntity<List<Rental>> getAllRentals() {
         List<Rental> rentals = rentalService.findAll();
         return ResponseEntity.ok(rentals);
     }
 
+    @Operation(summary = "Update a rental")
     @PutMapping("/api/rentals/{id}")
     public ResponseEntity<Rental> updateRental(@PathVariable Integer id, @ModelAttribute Rental updatedRental) {
         Optional<Rental> rental = rentalService.getRentalById(id);
