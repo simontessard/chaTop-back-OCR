@@ -18,14 +18,16 @@ import com.chatop.api.dto.TokenDTO;
 import com.chatop.api.models.User;
 
 import com.chatop.api.services.JWTService;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("api/auth")
 public class AuthController {
     private final JWTService jwtService;
 
     @Operation(summary = "Login an user to get him a token")
-    @PostMapping("/api/auth/login")
+    @PostMapping("/login")
     public ResponseEntity<TokenDTO> getToken() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String token = jwtService.generateToken(authentication);
@@ -34,7 +36,7 @@ public class AuthController {
     }
 
     @Operation(summary = "Register a new user and get him a token")
-    @PostMapping("/api/auth/register")
+    @PostMapping("/register")
     public ResponseEntity<TokenDTO> register(@RequestBody NewUserDTO user) {
         User newUser = jwtService.register(user.getUsername(), user.getPassword());
         Authentication authentication = new UsernamePasswordAuthenticationToken(newUser.getUsername(),
