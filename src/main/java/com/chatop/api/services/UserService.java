@@ -1,5 +1,6 @@
 package com.chatop.api.services;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -61,6 +62,8 @@ public class UserService {
         newUser.setEmail(email);
         newUser.setName(name);
         newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setCreatedAt(LocalDateTime.now());
+        newUser.setUpdatedAt(LocalDateTime.now());
         userRepository.save(newUser);
         return newUser;
     }

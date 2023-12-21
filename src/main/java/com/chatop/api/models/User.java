@@ -54,4 +54,12 @@ public class User {
     public void setUsername(String username) {
         this.username = username;
     }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.created_at = createdAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updated_at = updatedAt;
+    }
 }
