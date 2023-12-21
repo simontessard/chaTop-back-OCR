@@ -1,6 +1,6 @@
 package com.chatop.api.models;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,10 +17,35 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String email;
-    private String username;
+    private String name;
     private String password;
-    private Timestamp created_at;
-    private Timestamp updated_at;
+    private LocalDateTime created_at;
+    private LocalDateTime updated_at;
+    private String username;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return created_at;
+    }
+
+    public LocalDateTime getUpdatedAt() {
+        return updated_at;
+    }
 
     public String getUsername() {
         return username;

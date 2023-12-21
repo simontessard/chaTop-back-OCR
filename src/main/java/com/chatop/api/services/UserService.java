@@ -1,8 +1,10 @@
 package com.chatop.api.services;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +29,24 @@ public class UserService {
         } else {
             throw new UsernameNotFoundException("User Not Found with id: " + id);
         }
+    }
+
+    public User getUserByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return user;
+        } else {
+            throw new UsernameNotFoundException("User Not Found with username: " + username);
+        }
+    }
+
+    public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                new ArrayList<>());
     }
 
     public User register(String username, String password) {
