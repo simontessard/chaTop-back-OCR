@@ -12,7 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class NewUserDTO {
     @NotNull
-    private String username;
+    private String email;
+
+    @NotNull
+    private String name;
 
     @NotNull
     private String password;

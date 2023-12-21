@@ -49,21 +49,22 @@ public class AuthController {
             System.out.println("Password does not match");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-        Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails.getUsername(),
-                userDetails.getPassword(), userDetails.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtService.generateToken(authentication);
-        TokenDTO response = new TokenDTO(token);
-        return ResponseEntity.ok(response);
+        return authenticateAndGenerateToken(userDetails.getUsername(), userDetails.getPassword());
     }
 
     @Operation(summary = "Register a new user and get him a token")
     @PostMapping("/register")
     public ResponseEntity<TokenDTO> register(@RequestBody NewUserDTO user) {
-        User newUser = userService.register(user.getUsername(), user.getPassword());
-        Authentication authentication = new UsernamePasswordAuthenticationToken(newUser.getUsername(),
-                newUser.getPassword());
+        User newUser = userService.register(user.getName(), user.getEmail(), user.getPassword());
+
+        if (newUser == null) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+        return authenticateAndGenerateToken(newUser.getEmail(), newUser.getPassword());
+    }
+
+    private ResponseEntity<TokenDTO> authenticateAndGenerateToken(String username, String password) {
+        Authentication authentication = new UsernamePasswordAuthenticationToken(username, password);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtService.generateToken(authentication);
         TokenDTO response = new TokenDTO(token);

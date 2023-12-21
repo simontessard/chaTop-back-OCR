@@ -49,15 +49,16 @@ public class UserService {
                 new ArrayList<>());
     }
 
-    public User register(String username, String password) {
+    public User register(String name, String email, String password) {
+        User existingUser = userRepository.findByEmail(email);
 
-        User existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
             throw new RuntimeException("User already exists");
         }
 
         User newUser = new User();
-        newUser.setUsername(username);
+        newUser.setEmail(email);
+        newUser.setName(name);
         newUser.setPassword(passwordEncoder.encode(password));
         userRepository.save(newUser);
         return newUser;
