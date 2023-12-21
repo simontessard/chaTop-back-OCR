@@ -57,6 +57,7 @@ public class RentalController {
         }
     }
 
+    @Operation(summary = "Created a new rental")
     @PostMapping("/api/rentals/{id}")
     public ResponseEntity<Rental> createRental(@PathVariable Integer id, @RequestPart("rental") Rental newRental,
             @RequestPart("picture") MultipartFile picture) {
