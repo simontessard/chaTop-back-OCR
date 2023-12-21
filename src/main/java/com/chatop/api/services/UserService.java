@@ -6,7 +6,6 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.chatop.api.models.User;
@@ -16,7 +15,6 @@ import jakarta.transaction.Transactional;
 
 @Service
 public class UserService {
-    private BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     UserRepository userRepository;
@@ -59,7 +57,7 @@ public class UserService {
         User newUser = new User();
         newUser.setEmail(email);
         newUser.setName(name);
-        newUser.setPassword(passwordEncoder.encode(password));
+        newUser.setPassword(password);
         userRepository.save(newUser);
         return newUser;
     }
