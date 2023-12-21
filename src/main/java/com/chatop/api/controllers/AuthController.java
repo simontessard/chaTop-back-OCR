@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.chatop.api.dto.LoginDTO;
 import com.chatop.api.dto.NewUserDTO;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
     private final JWTService jwtService;
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
     @Operation(summary = "Login an user to get him a token")
     @PostMapping("/login")
