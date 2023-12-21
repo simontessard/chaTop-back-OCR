@@ -12,15 +12,9 @@ import org.springframework.security.core.Authentication;
 
 import org.springframework.stereotype.Service;
 
-import com.chatop.api.models.User;
-import com.chatop.api.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 @Service
 public class JWTService {
     private JwtEncoder jwtEncoder;
-    private UserRepository userRepository;
-    private BCryptPasswordEncoder passwordEncoder;
 
     public JWTService(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
@@ -47,19 +41,5 @@ public class JWTService {
             e.printStackTrace();
             return null;
         }
-    }
-
-    public User register(String username, String password) {
-
-        User existingUser = userRepository.findByUsername(username);
-        if (existingUser != null) {
-            throw new RuntimeException("User already exists");
-        }
-
-        User newUser = new User();
-        newUser.setUsername(username);
-        newUser.setPassword(passwordEncoder.encode(password)); // encode the password
-        userRepository.save(newUser);
-        return newUser;
     }
 }
