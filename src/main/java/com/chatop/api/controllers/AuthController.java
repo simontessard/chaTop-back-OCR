@@ -39,7 +39,7 @@ public class AuthController {
 
         UserDetails userDetails;
         try {
-            userDetails = userService.loadUserByEmail(user.getLogin());
+            userDetails = userService.loadUserByEmail(user.getEmail());
         } catch (UsernameNotFoundException e) {
             System.out.println("User not found");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

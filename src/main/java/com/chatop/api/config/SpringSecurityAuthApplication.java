@@ -56,7 +56,7 @@ public class SpringSecurityAuthApplication {
 
     @Bean
     public UserDetailsService users() {
-        UserDetails user = User.builder().username("login").password(passwordEncoder().encode("password"))
+        UserDetails user = User.builder().username("email").password(passwordEncoder().encode("password"))
                 .build();
         return new InMemoryUserDetailsManager(user);
     }
