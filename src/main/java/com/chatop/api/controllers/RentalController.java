@@ -4,6 +4,7 @@ import java.util.Optional;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.io.File;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.chatop.api.models.Rental;
 import com.chatop.api.services.RentalService;
+import com.chatop.api.services.AmazonService;
 
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class RentalController {
     private final RentalService rentalService;
+    private final AmazonService amazonService;
 
     @Operation(summary = "Get a specific rental")
     @GetMapping("/api/rentals/{id}")
@@ -63,9 +66,30 @@ public class RentalController {
 
     @Operation(summary = "Created a new rental")
     @PostMapping("/api/rentals/{id}")
-    public ResponseEntity<Rental> createRental(@PathVariable Integer id, @RequestPart("rental") Rental newRental,
-            @RequestPart("picture") MultipartFile picture) {
+    public ResponseEntity<Rental> createRental(@PathVariable Integer id, @RequestPart("name") String name,
+            @RequestPart("surface") Double surface, @RequestPart("price") Double price,
+            @RequestPart("description") String description, @RequestPart("picture") MultipartFile picture) {
+
+        Rental newRental = new Rental();
         newRental.setId(id);
+        newRental.setName(name);
+        newRental.setSurface(surface);
+        newRental.setPrice(price);
+        newRental.setDescription(description);
+
+        System.out.println(picture.getOriginalFilename());
+
+        String pictureKey = picture.getOriginalFilename();
+        try {
+            File tempFile = File.createTempFile("upload-", "");
+            picture.transferTo(tempFile);
+            String pictureUrl = amazonService.putObject(pictureKey, tempFile.getAbsolutePath());
+
+            newRental.setPicture(pictureUrl);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+
         Rental savedRental = rentalService.createRental(newRental);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedRental);
     }
