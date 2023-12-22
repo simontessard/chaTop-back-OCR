@@ -47,7 +47,9 @@ public class UserService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found");
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+        // Using username or name as email because database is not consistent
+        String username = (user.getUsername() != null) ? user.getUsername() : user.getName();
+        return new org.springframework.security.core.userdetails.User(username, user.getPassword(),
                 new ArrayList<>());
     }
 
@@ -64,6 +66,7 @@ public class UserService {
         newUser.setPassword(passwordEncoder.encode(password));
         newUser.setCreatedAt(LocalDateTime.now());
         newUser.setUpdatedAt(LocalDateTime.now());
+        newUser.setUsername(name);
         userRepository.save(newUser);
         return newUser;
     }
