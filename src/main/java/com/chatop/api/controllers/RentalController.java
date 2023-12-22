@@ -1,7 +1,9 @@
 package com.chatop.api.controllers;
 
 import java.util.Optional;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,9 +36,11 @@ public class RentalController {
 
     @Operation(summary = "Get all rentals")
     @GetMapping("/api/rentals")
-    public ResponseEntity<List<Rental>> getAllRentals() {
+    public ResponseEntity<Map<String, List<Rental>>> getAllRentals() {
         List<Rental> rentals = rentalService.findAll();
-        return ResponseEntity.ok(rentals);
+        Map<String, List<Rental>> response = new HashMap<>();
+        response.put("rentals", rentals);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Update a rental")
