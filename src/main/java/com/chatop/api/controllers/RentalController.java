@@ -1,6 +1,9 @@
 package com.chatop.api.controllers;
 
 import java.util.Optional;
+
+import javax.validation.Valid;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,10 +16,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.chatop.api.dto.RentalCreateDTO;
 import com.chatop.api.models.Rental;
 import com.chatop.api.services.RentalService;
 import com.chatop.api.services.AmazonService;
@@ -65,24 +70,21 @@ public class RentalController {
     }
 
     @Operation(summary = "Created a new rental")
-    @PostMapping("/api/rentals/{id}")
-    public ResponseEntity<Rental> createRental(@PathVariable Integer id, @RequestPart("name") String name,
-            @RequestPart("surface") Double surface, @RequestPart("price") Double price,
-            @RequestPart("description") String description, @RequestPart("picture") MultipartFile picture) {
+    @PostMapping("/api/rentals")
+    public ResponseEntity<Rental> createRental(@Valid RentalCreateDTO rentalInfo) {
 
         Rental newRental = new Rental();
-        newRental.setId(id);
-        newRental.setName(name);
-        newRental.setSurface(surface);
-        newRental.setPrice(price);
-        newRental.setDescription(description);
+        newRental.setName(rentalInfo.getName());
+        newRental.setSurface(rentalInfo.getSurface());
+        newRental.setPrice(rentalInfo.getPrice());
+        newRental.setDescription(rentalInfo.getDescription());
 
-        System.out.println(picture.getOriginalFilename());
+        System.out.println(rentalInfo.getPicture().getOriginalFilename());
 
-        String pictureKey = picture.getOriginalFilename();
+        String pictureKey = rentalInfo.getPicture().getOriginalFilename();
         try {
             File tempFile = File.createTempFile("upload-", "");
-            picture.transferTo(tempFile);
+            rentalInfo.getPicture().transferTo(tempFile);
             String pictureUrl = amazonService.putObject(pictureKey, tempFile.getAbsolutePath());
 
             newRental.setPicture(pictureUrl);
