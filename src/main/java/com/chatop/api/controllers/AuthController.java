@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import com.chatop.api.dto.LoginDTO;
 import com.chatop.api.dto.NewUserDTO;
@@ -31,12 +32,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AuthController {
     private final JWTService jwtService;
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
 
     @Operation(summary = "Login an user to get him a token")
     @PostMapping("/login")
     public ResponseEntity<TokenDTO> getToken(@RequestBody LoginDTO user) {
-        // System.out.println(user.getLogin());
-
         UserDetails userDetails;
         try {
             userDetails = userService.loadUserByEmail(user.getEmail());
@@ -45,7 +45,8 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        if (!user.getPassword().equals(userDetails.getPassword())) {
+        // Check if the password matches the encoded password
+        if (!passwordEncoder.matches(user.getPassword(), userDetails.getPassword())) {
             System.out.println("Password does not match");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
