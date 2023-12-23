@@ -15,14 +15,31 @@ import com.chatop.api.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
+/**
+ * Service class for handling User operations.
+ */
 @Service
 public class UserService {
 
+    /**
+     * The repository used for interacting with users in the database.
+     */
     @Autowired
     UserRepository userRepository;
+
+    /**
+     * The password encoder used for encoding passwords.
+     */
     @Autowired
     BCryptPasswordEncoder passwordEncoder;
 
+    /**
+     * Retrieves a user by its ID.
+     *
+     * @param id The ID of the user to retrieve.
+     * @return The retrieved user.
+     * @throws UsernameNotFoundException if no user is found with the given ID.
+     */
     @Transactional
     public User getUserById(Integer id) {
         Optional<User> user = userRepository.findById(id);
@@ -33,6 +50,14 @@ public class UserService {
         }
     }
 
+    /**
+     * Retrieves a user by its username.
+     *
+     * @param username The username of the user to retrieve.
+     * @return The retrieved user.
+     * @throws UsernameNotFoundException if no user is found with the given
+     *                                   username.
+     */
     public User getUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
         if (user != null) {
@@ -42,6 +67,13 @@ public class UserService {
         }
     }
 
+    /**
+     * Loads a user by its email.
+     *
+     * @param email The email of the user to load.
+     * @return The loaded user.
+     * @throws UsernameNotFoundException if no user is found with the given email.
+     */
     public UserDetails loadUserByEmail(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email);
         if (user == null) {
@@ -53,6 +85,15 @@ public class UserService {
                 new ArrayList<>());
     }
 
+    /**
+     * Registers a new user.
+     *
+     * @param name     The name of the user.
+     * @param email    The email of the user.
+     * @param password The password of the user.
+     * @return The registered user.
+     * @throws RuntimeException if a user already exists with the given email.
+     */
     public User register(String name, String email, String password) {
         User existingUser = userRepository.findByEmail(email);
 

@@ -12,14 +12,35 @@ import org.springframework.security.core.Authentication;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for handling JSON Web Token (JWT) operations.
+ */
 @Service
 public class JWTService {
+    /**
+     * The JWT encoder used for encoding JWTs.
+     */
     private JwtEncoder jwtEncoder;
 
+    /**
+     * Constructor for the JWTService class.
+     *
+     * @param jwtEncoder The JWT encoder to use for encoding JWTs.
+     */
     public JWTService(JwtEncoder jwtEncoder) {
         this.jwtEncoder = jwtEncoder;
     }
 
+    /**
+     * Generates a JWT for the given authentication.
+     *
+     * The JWT's subject is the name of the authentication, and it is issued by
+     * "self".
+     * The JWT expires 1 day after it is issued.
+     *
+     * @param authentication The authentication for which to generate a JWT.
+     * @return The generated JWT, or null if an error occurred.
+     */
     public String generateToken(Authentication authentication) {
         try {
             if (authentication == null) {

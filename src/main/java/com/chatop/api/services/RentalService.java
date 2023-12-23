@@ -8,22 +8,52 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+/**
+ * Service class for handling Rental operations.
+ */
 @Service
 public class RentalService {
+    /**
+     * The repository used for interacting with rentals in the database.
+     */
     private final RentalRepository rentalRepository;
 
+    /**
+     * Constructor for the RentalService class.
+     *
+     * @param rentalRepository The repository to use for interacting with rentals in
+     *                         the database.
+     */
     public RentalService(RentalRepository rentalRepository) {
         this.rentalRepository = rentalRepository;
     }
 
+    /**
+     * Retrieves all rentals from the database.
+     *
+     * @return A list of all rentals.
+     */
     public List<Rental> findAll() {
         return rentalRepository.findAll();
     }
 
+    /**
+     * Retrieves a rental by its ID.
+     *
+     * @param id The ID of the rental to retrieve.
+     * @return An Optional containing the rental if found, or empty if not.
+     */
     public Optional<Rental> getRentalById(Integer id) {
         return rentalRepository.findById(id);
     }
 
+    /**
+     * Updates a rental in the database.
+     *
+     * @param id            The ID of the rental to update.
+     * @param updatedRental The rental object containing the updated data.
+     * @return An Optional containing the updated rental if found, or empty if not.
+     */
     public Optional<Rental> updateRental(Integer id, Rental updatedRental) {
         return rentalRepository.findById(id).map(rental -> {
             if (updatedRental.getName() != null) {
@@ -43,12 +73,24 @@ public class RentalService {
         });
     }
 
+    /**
+     * Creates a new rental in the database.
+     *
+     * @param newRental The rental to create.
+     * @return The created rental.
+     */
     public Rental createRental(Rental newRental) {
         newRental.setCreated_at(new Timestamp(System.currentTimeMillis()));
         newRental.setUpdated_at(newRental.getCreated_at());
         return rentalRepository.save(newRental);
     }
 
+    /**
+     * Saves a rental in the database.
+     *
+     * @param rental The rental to save.
+     * @return The saved rental.
+     */
     public Rental save(Rental rental) {
         return rentalRepository.save(rental);
     }
