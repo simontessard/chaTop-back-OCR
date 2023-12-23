@@ -1,50 +1,46 @@
 package com.chatop.api.services;
 
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.S3Object;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
-import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Paths;
 
+/**
+ * Service class for handling Amazon S3 operations.
+ */
 @Service
 public class AmazonService {
 
+    /**
+     * The S3 client used for interacting with Amazon S3.
+     */
     private final S3Client s3Client;
 
+    /**
+     * The name of the S3 bucket to interact with.
+     */
     @Value("${amazonProperties.bucketName}")
     private String bucketName;
 
+    /**
+     * Constructor for the AmazonService class.
+     *
+     * @param s3Client The S3 client to use for interacting with Amazon S3.
+     */
     public AmazonService(S3Client s3Client) {
         this.s3Client = s3Client;
     }
 
-    public void listObjects() {
-        ListObjectsV2Request listObjectsReqManual = ListObjectsV2Request.builder()
-                .bucket(bucketName)
-                .build();
-
-        ListObjectsV2Response listObjResponse = s3Client.listObjectsV2(listObjectsReqManual);
-
-        for (S3Object content : listObjResponse.contents()) {
-            System.out.println(content.key());
-        }
-    }
-
-    public void getObject(String key) {
-        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                .bucket(bucketName)
-                .key(key)
-                .build();
-
-        s3Client.getObject(getObjectRequest, Paths.get("downloaded-" + key));
-    }
-
+    /**
+     * Uploads an object to the S3 bucket.
+     *
+     * @param key      The key to assign to the uploaded object.
+     * @param filePath The path to the file to upload.
+     * @return The URL of the uploaded object.
+     */
     public String putObject(String key, String filePath) {
         PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
@@ -53,9 +49,7 @@ public class AmazonService {
 
         s3Client.putObject(putObjectRequest, Paths.get(filePath));
 
-        // Get the URL of the uploaded object
         String url = s3Client.utilities().getUrl(builder -> builder.bucket(bucketName).key(key)).toExternalForm();
-
         return url;
     }
 }
