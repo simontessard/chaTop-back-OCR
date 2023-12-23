@@ -1,5 +1,8 @@
 package com.chatop.api.controllers;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -31,8 +34,8 @@ public class UserController {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getCreatedAt(),
-                user.getUpdatedAt());
+                formatDate(user.getCreated_at()),
+                formatDate(user.getUpdated_at()));
         return ResponseEntity.ok(userDetails);
     }
 
@@ -47,8 +50,13 @@ public class UserController {
                 user.getId(),
                 user.getName(),
                 user.getEmail(),
-                user.getCreatedAt(),
-                user.getUpdatedAt());
+                formatDate(user.getCreated_at()),
+                formatDate(user.getUpdated_at()));
         return ResponseEntity.ok(userDetails);
+    }
+
+    private String formatDate(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        return dateTime.format(formatter);
     }
 }

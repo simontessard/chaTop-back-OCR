@@ -1,6 +1,5 @@
 package com.chatop.api.dto;
 
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +13,6 @@ public class UserDetailsDTO {
     private Integer id;
     private String name;
     private String email;
-    private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
+    private String created_at;
+    private String updated_at;
 }
