@@ -1,10 +1,12 @@
 package com.chatop.api.services;
 
+import com.chatop.api.dto.RentalCreateDTO;
 import com.chatop.api.models.Rental;
 import com.chatop.api.repository.RentalRepository;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
+import java.io.File;
 
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ public class RentalService {
      * The repository used for interacting with rentals in the database.
      */
     private final RentalRepository rentalRepository;
+    private final AmazonService amazonService;
 
     /**
      * Constructor for the RentalService class.
@@ -24,8 +27,9 @@ public class RentalService {
      * @param rentalRepository The repository to use for interacting with rentals in
      *                         the database.
      */
-    public RentalService(RentalRepository rentalRepository) {
+    public RentalService(RentalRepository rentalRepository, AmazonService amazonService) {
         this.rentalRepository = rentalRepository;
+        this.amazonService = amazonService;
     }
 
     /**
@@ -79,9 +83,25 @@ public class RentalService {
      * @param newRental The rental to create.
      * @return The created rental.
      */
-    public Rental createRental(Rental newRental) {
+    public Rental createRental(RentalCreateDTO rentalInfo) {
+        Rental newRental = new Rental();
+        newRental.setName(rentalInfo.getName());
+        newRental.setSurface(rentalInfo.getSurface());
+        newRental.setPrice(rentalInfo.getPrice());
+        newRental.setDescription(rentalInfo.getDescription());
         newRental.setCreated_at(new Timestamp(System.currentTimeMillis()));
         newRental.setUpdated_at(newRental.getCreated_at());
+
+        String pictureKey = rentalInfo.getPicture().getOriginalFilename();
+        try {
+            File tempFile = File.createTempFile("upload-", "");
+            rentalInfo.getPicture().transferTo(tempFile);
+            String pictureUrl = amazonService.putObject(pictureKey, tempFile.getAbsolutePath());
+
+            newRental.setPicture(pictureUrl);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to upload picture", e);
+        }
         return rentalRepository.save(newRental);
     }
 
