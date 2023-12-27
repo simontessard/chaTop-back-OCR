@@ -1,6 +1,7 @@
 package com.chatop.api.services;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Optional;
 
@@ -10,6 +11,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.chatop.api.dto.UserDetailsDTO;
 import com.chatop.api.models.User;
 import com.chatop.api.repository.UserRepository;
 
@@ -65,6 +67,32 @@ public class UserService {
         } else {
             throw new UsernameNotFoundException("User Not Found with username: " + username);
         }
+    }
+
+    /**
+     * Returns a UserDetailsDTO object for the given User.
+     *
+     * @param user The User object to convert to UserDetailsDTO.
+     * @return A UserDetailsDTO object with the details of the given User.
+     */
+    public UserDetailsDTO getUserDetails(User user) {
+        return new UserDetailsDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                formatDate(user.getCreated_at()),
+                formatDate(user.getUpdated_at()));
+    }
+
+    /**
+     * Formats a LocalDateTime object to a String in the format "yyyy/MM/dd".
+     *
+     * @param dateTime The LocalDateTime object to format.
+     * @return A String representing the formatted date.
+     */
+    private String formatDate(LocalDateTime dateTime) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        return dateTime.format(formatter);
     }
 
     /**

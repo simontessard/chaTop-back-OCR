@@ -1,8 +1,5 @@
 package com.chatop.api.controllers;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,12 +27,7 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         User user = userService.getUserByUsername(username);
-        UserDetailsDTO userDetails = new UserDetailsDTO(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                formatDate(user.getCreated_at()),
-                formatDate(user.getUpdated_at()));
+        UserDetailsDTO userDetails = userService.getUserDetails(user);
         return ResponseEntity.ok(userDetails);
     }
 
@@ -46,17 +38,7 @@ public class UserController {
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
-        UserDetailsDTO userDetails = new UserDetailsDTO(
-                user.getId(),
-                user.getName(),
-                user.getEmail(),
-                formatDate(user.getCreated_at()),
-                formatDate(user.getUpdated_at()));
+        UserDetailsDTO userDetails = userService.getUserDetails(user);
         return ResponseEntity.ok(userDetails);
-    }
-
-    private String formatDate(LocalDateTime dateTime) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        return dateTime.format(formatter);
     }
 }
